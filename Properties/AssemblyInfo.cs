@@ -19,8 +19,8 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyMetadata("License", "MPL-2.0")]
 [assembly: AssemblyMetadata("LicenseURL", "https://www.mozilla.org/en-US/MPL/2.0/")]
-[assembly: AssemblyMetadata("Repository", "")]
-[assembly: AssemblyMetadata("Homepage", "")]
+[assembly: AssemblyMetadata("Repository", "https://github.com/ggalb/SpaceHunter_nina-phd2-guiding-assistant-plugin")]
+[assembly: AssemblyMetadata("Homepage", "https://github.com/ggalb/SpaceHunter_nina-phd2-guiding-assistant-plugin")]
 [assembly: AssemblyMetadata("Tags", "PHD2,Guiding,Guiding Assistant,Min Move")]
 [assembly: AssemblyMetadata("ChangelogURL", "")]
 [assembly: AssemblyMetadata("FeaturedImageURL", "")]
