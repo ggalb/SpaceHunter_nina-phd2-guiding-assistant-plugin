@@ -1,0 +1,109 @@
+<ResourceDictionary
+    x:Class="NINA.Plugin.Phd2GuidingAssistant.SequenceItems.Templates"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:NINA.Plugin.Phd2GuidingAssistant.SequenceItems"
+    xmlns:core="clr-namespace:NINA.Plugin.Phd2GuidingAssistant.Core"
+    xmlns:nina="clr-namespace:NINA.View.Sequencer;assembly=NINA.Sequencer"
+    xmlns:ninactrl="clr-namespace:NINA.CustomControlLibrary;assembly=NINA.CustomControlLibrary"
+    xmlns:rules="clr-namespace:NINA.Core.Utility.ValidationRules;assembly=NINA.Core"
+    xmlns:util="clr-namespace:NINA.Core.Utility;assembly=NINA.Core">
+
+    <!--  A simple eye/target glyph - PHD2's own is trademarked, so this is a plain crosshair instead.  -->
+    <GeometryGroup x:Key="PHD2SVG">
+        <EllipseGeometry Center="512,512" RadiusX="420" RadiusY="420" />
+        <EllipseGeometry Center="512,512" RadiusX="180" RadiusY="180" />
+        <RectangleGeometry Rect="472,20,80,260" />
+        <RectangleGeometry Rect="472,744,80,260" />
+        <RectangleGeometry Rect="20,472,260,80" />
+        <RectangleGeometry Rect="744,472,260,80" />
+    </GeometryGroup>
+
+    <DataTemplate DataType="{x:Type local:RunGuidingAssistant}">
+        <nina:SequenceBlockView>
+            <nina:SequenceBlockView.SequenceItemContent>
+                <StackPanel Orientation="Vertical">
+
+                    <StackPanel Orientation="Horizontal">
+
+                        <StackPanel Margin="0,0,10,0" Orientation="Vertical">
+                            <TextBlock Text="GA time" />
+                            <ninactrl:UnitTextBox Unit="s" VerticalAlignment="Center">
+                                <TextBox.Text>
+                                    <Binding Path="GaSeconds" UpdateSourceTrigger="LostFocus">
+                                        <Binding.ValidationRules>
+                                            <rules:GreaterZeroRule />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </ninactrl:UnitTextBox>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,10,0" Orientation="Vertical">
+                            <TextBlock Text="Target Dec" />
+                            <ninactrl:UnitTextBox Unit="deg" VerticalAlignment="Center">
+                                <TextBox.Text>
+                                    <Binding Path="TargetDec" UpdateSourceTrigger="LostFocus" />
+                                </TextBox.Text>
+                            </ninactrl:UnitTextBox>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,10,0" Orientation="Vertical">
+                            <TextBlock Text="Meridian offset (W)" />
+                            <ninactrl:UnitTextBox Unit="deg" VerticalAlignment="Center">
+                                <TextBox.Text>
+                                    <Binding Path="MeridianOffsetDeg" UpdateSourceTrigger="LostFocus" />
+                                </TextBox.Text>
+                            </ninactrl:UnitTextBox>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="End action" />
+                            <ComboBox
+                                MinWidth="80"
+                                VerticalAlignment="Center"
+                                ItemsSource="{Binding Source={util:EnumBindingSource {x:Type core:EndAction}}}"
+                                SelectedItem="{Binding EndAction}" />
+                        </StackPanel>
+
+                    </StackPanel>
+
+                    <Expander
+                        Margin="0,6,0,0"
+                        Header="Alt/Az helper - convert an open patch of sky to Target Dec / Meridian offset"
+                        IsExpanded="False"
+                        ToolTip="Use this if the default position (Dec 0, 5 deg west) is blocked by an obstruction. Uses this profile's configured site latitude.">
+                        <StackPanel Margin="20,8,0,0" Orientation="Horizontal">
+                            <StackPanel Margin="0,0,10,0" Orientation="Vertical">
+                                <TextBlock Text="Altitude" />
+                                <ninactrl:UnitTextBox Unit="deg" VerticalAlignment="Center">
+                                    <TextBox.Text>
+                                        <Binding Path="HelperAlt" UpdateSourceTrigger="LostFocus" />
+                                    </TextBox.Text>
+                                </ninactrl:UnitTextBox>
+                            </StackPanel>
+
+                            <StackPanel Margin="0,0,10,0" Orientation="Vertical">
+                                <TextBlock Text="Azimuth (0=N, 90=E)" />
+                                <ninactrl:UnitTextBox Unit="deg" VerticalAlignment="Center">
+                                    <TextBox.Text>
+                                        <Binding Path="HelperAz" UpdateSourceTrigger="LostFocus" />
+                                    </TextBox.Text>
+                                </ninactrl:UnitTextBox>
+                            </StackPanel>
+
+                            <Button
+                                MinWidth="140"
+                                Margin="0,18,0,0"
+                                VerticalAlignment="Center"
+                                Command="{Binding ComputeFromAltAzCommand}"
+                                Content="Compute Dec / Offset"
+                                ToolTip="Overwrites Target Dec and Meridian offset above." />
+                        </StackPanel>
+                    </Expander>
+
+                </StackPanel>
+            </nina:SequenceBlockView.SequenceItemContent>
+        </nina:SequenceBlockView>
+    </DataTemplate>
+</ResourceDictionary>

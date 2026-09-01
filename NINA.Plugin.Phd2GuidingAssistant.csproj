@@ -1,0 +1,92 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+
+    <AssemblyTitle>PHD2 Guiding Assistant</AssemblyTitle>
+    <Title>PHD2 Guiding Assistant</Title>
+    <Authors>Georg</Authors>
+    <Product>PHD2 Guiding Assistant</Product>
+    <Description>Runs PHD2's Guiding Assistant unattended from the N.I.N.A. Sequencer: slews to a calibration spot, measures seeing/drift with guide output disabled, applies the recommended minimum-move values, and stands the mount down.</Description>
+    <Copyright>Copyright © 2026</Copyright>
+
+    <!-- Local install of N.I.N.A. used as the compile-time reference source (no NuGet/network needed). -->
+    <NinaInstallDir>C:\Program Files\N.I.N.A. - Nighttime Imaging 'N' Astronomy</NinaInstallDir>
+    <NinaPluginVersion>3.0.0</NinaPluginVersion>
+    <NinaPluginName>PHD2 Guiding Assistant</NinaPluginName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Referenced directly from the local N.I.N.A. install rather than the NINA.Plugin NuGet
+         meta-package, so the build needs no network access and matches the exact installed
+         version (3.2.0.9001) byte for byte. Private=false: these assemblies already exist in
+         N.I.N.A.'s own folder at runtime and must not be copied into the plugin's output. -->
+    <Reference Include="NINA.Core">
+      <HintPath>$(NinaInstallDir)\NINA.Core.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="NINA.Astrometry">
+      <HintPath>$(NinaInstallDir)\NINA.Astrometry.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="NINA.Equipment">
+      <HintPath>$(NinaInstallDir)\NINA.Equipment.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="NINA.Profile">
+      <HintPath>$(NinaInstallDir)\NINA.Profile.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="NINA.Sequencer">
+      <HintPath>$(NinaInstallDir)\NINA.Sequencer.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="NINA.WPF.Base">
+      <HintPath>$(NinaInstallDir)\NINA.WPF.Base.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="NINA.CustomControlLibrary">
+      <HintPath>$(NinaInstallDir)\NINA.CustomControlLibrary.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="NINA.Plugin">
+      <HintPath>$(NinaInstallDir)\NINA.Plugin.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition">
+      <HintPath>$(NinaInstallDir)\System.ComponentModel.Composition.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="CommunityToolkit.Mvvm">
+      <HintPath>$(NinaInstallDir)\CommunityToolkit.Mvvm.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- The Reference above gives the exact runtime type identity N.I.N.A. itself loads (8.4.0.1);
+         this PackageReference contributes ONLY its Roslyn source generator (the [ObservableProperty]
+         partial-property codegen), which a plain file Reference cannot provide. It deliberately
+         supplies no compile or runtime assembly, so there is no duplicate/conflicting copy of
+         CommunityToolkit.Mvvm.dll anywhere in this build. -->
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" ExcludeAssets="runtime;compile;native;contentFiles;build;buildMultitargeting;buildTransitive" IncludeAssets="analyzers" PrivateAssets="all" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(NinaInstallDir)\Newtonsoft.Json.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Debug builds drop straight into N.I.N.A.'s plugin folder so F5-less iteration just needs
+       an N.I.N.A. restart. Mirrors the pattern used by nina.plugin.phd2tools. -->
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)'=='Debug'">
+    <MakeDir Directories="$(LocalAppData)\NINA\Plugins\$(NinaPluginVersion)\$(NinaPluginName)" Condition="!Exists('$(LocalAppData)\NINA\Plugins\$(NinaPluginVersion)\$(NinaPluginName)')" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(LocalAppData)\NINA\Plugins\$(NinaPluginVersion)\$(NinaPluginName)" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(LocalAppData)\NINA\Plugins\$(NinaPluginVersion)\$(NinaPluginName)" Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
+  </Target>
+
+</Project>

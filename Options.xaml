@@ -1,0 +1,121 @@
+<ResourceDictionary
+    x:Class="NINA.Plugin.Phd2GuidingAssistant.Options"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ninactrl="clr-namespace:NINA.CustomControlLibrary;assembly=NINA.CustomControlLibrary"
+    xmlns:rules="clr-namespace:NINA.Core.Utility.ValidationRules;assembly=NINA.Core">
+
+    <!--  Naming convention required by N.I.N.A.: "<AssemblyTitle>_Options"  -->
+    <DataTemplate x:Key="Phd2 GA - Measure Seeing Conditions_Options">
+        <StackPanel Orientation="Vertical" MaxWidth="520" HorizontalAlignment="Left">
+            <TextBlock
+                Margin="0,0,0,10"
+                FontSize="14"
+                FontWeight="Bold"
+                Text="Phd2 GA - Measure Seeing Conditions - defaults" />
+            <TextBlock
+                Margin="0,0,0,10"
+                TextWrapping="Wrap"
+                Text="These apply to every use of the 'Run PHD2 Guiding Assistant' sequence instruction. Run length, target Dec, meridian offset and end action are set on the instruction itself, so different sequences can use different values." />
+
+            <Grid Margin="0,4,0,4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="260" />
+                    <ColumnDefinition Width="100" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="Backlash approach distance" ToolTip="Degrees south of the target Dec the first slew leg aims for, so the final move is northward and clears Dec backlash." />
+                <ninactrl:UnitTextBox Grid.Row="0" Grid.Column="1" Unit="deg" VerticalAlignment="Center">
+                    <TextBox.Text>
+                        <Binding Path="BacklashApproachDeg" UpdateSourceTrigger="LostFocus">
+                            <Binding.ValidationRules>
+                                <rules:GreaterZeroRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </ninactrl:UnitTextBox>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text="Post-slew position tolerance" ToolTip="How far Dec/hour-angle may differ from the target before the run aborts as a mis-slew." />
+                <ninactrl:UnitTextBox Grid.Row="1" Grid.Column="1" Unit="deg" VerticalAlignment="Center">
+                    <TextBox.Text>
+                        <Binding Path="PositionToleranceDeg" UpdateSourceTrigger="LostFocus">
+                            <Binding.ValidationRules>
+                                <rules:GreaterZeroRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </ninactrl:UnitTextBox>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="Slew timeout" />
+                <ninactrl:UnitTextBox Grid.Row="2" Grid.Column="1" Unit="s" VerticalAlignment="Center">
+                    <TextBox.Text>
+                        <Binding Path="SlewTimeoutSec" UpdateSourceTrigger="LostFocus">
+                            <Binding.ValidationRules>
+                                <rules:GreaterZeroRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </ninactrl:UnitTextBox>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Text="Home / Park timeout" />
+                <ninactrl:UnitTextBox Grid.Row="3" Grid.Column="1" Unit="s" VerticalAlignment="Center">
+                    <TextBox.Text>
+                        <Binding Path="HomeTimeoutSec" UpdateSourceTrigger="LostFocus">
+                            <Binding.ValidationRules>
+                                <rules:GreaterZeroRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </ninactrl:UnitTextBox>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Text="Wait for recommendations" ToolTip="How long to wait after clicking Stop for PHD2 to finish sampling and show its Apply buttons." />
+                <ninactrl:UnitTextBox Grid.Row="4" Grid.Column="1" Unit="s" VerticalAlignment="Center">
+                    <TextBox.Text>
+                        <Binding Path="ApplyWaitSec" UpdateSourceTrigger="LostFocus">
+                            <Binding.ValidationRules>
+                                <rules:GreaterZeroRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </ninactrl:UnitTextBox>
+
+                <TextBlock Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Text="Tolerated star-lost events" ToolTip="How many StarLost events during the measurement run are tolerated before it is aborted." />
+                <ninactrl:UnitTextBox Grid.Row="5" Grid.Column="1" Unit="" VerticalAlignment="Center">
+                    <TextBox.Text>
+                        <Binding Path="MaxStarLost" UpdateSourceTrigger="LostFocus" />
+                    </TextBox.Text>
+                </ninactrl:UnitTextBox>
+
+                <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Text="Guide-start timeout" ToolTip="How long to allow for finding a guide star and settling guiding before giving up and standing the mount down. N.I.N.A.'s own guider connection will otherwise keep retrying internally for several minutes on its own (e.g. closed dome, daytime test)." />
+                <ninactrl:UnitTextBox Grid.Row="6" Grid.Column="1" Unit="s" VerticalAlignment="Center">
+                    <TextBox.Text>
+                        <Binding Path="GuideStartTimeoutSec" UpdateSourceTrigger="LostFocus">
+                            <Binding.ValidationRules>
+                                <rules:GreaterZeroRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </ninactrl:UnitTextBox>
+            </Grid>
+
+            <StackPanel Margin="0,8,0,0" Orientation="Horizontal" ToolTip="By default the run clears PHD2's displays after stopping capture, so the unguided wander from the measurement doesn't inflate the RMS reading N.I.N.A. sees when real imaging starts.">
+                <TextBlock VerticalAlignment="Center" Text="Leave PHD2's History / Target panes alone after the run" TextWrapping="Wrap" />
+                <CheckBox Margin="10,0,0,0" VerticalAlignment="Center" IsChecked="{Binding NoClearPhd2Displays}" />
+            </StackPanel>
+
+            <StackPanel Margin="0,4,0,0" Orientation="Horizontal" ToolTip="Tick this only if your own 'When Becomes Unsafe' handling already stops tracking or parks the mount - otherwise leave it unticked so the mount does not drift for hours under a closed roof.">
+                <TextBlock VerticalAlignment="Center" Text="Do not stop sidereal tracking when standing off unsafe" TextWrapping="Wrap" />
+                <CheckBox Margin="10,0,0,0" VerticalAlignment="Center" IsChecked="{Binding NoStopTrackingWhenUnsafe}" />
+            </StackPanel>
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>
