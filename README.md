@@ -44,6 +44,13 @@ Guiding Assistant directly and manually.
 - PHD2 as the connected guider (this plugin only works with PHD2)
 - An existing PHD2 calibration for the current pier side
 
+## Example Sequences
+
+See [docs/examples.md](docs/examples.md) for three example setups - open sky, roof with
+clearance, and roof with no clearance - with screenshots and downloadable N.I.N.A. sequence
+templates. These are examples only: test the safety behavior thoroughly for your own equipment
+and environment before relying on them - no warranty is provided.
+
 ## Building
 
 The project references N.I.N.A.'s own assemblies directly from a local
