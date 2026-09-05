@@ -20,6 +20,16 @@ you. Set it to run at the end of your set-up sequence, before imaging starts.
 4. Applies every minimum-move recommendation PHD2 offers.
 5. Stops capture and stands the mount down (Home / Park / None).
 
+> **If your mount cannot find home, add an Unpark after this
+> instruction.** `End action = Auto` uses Find home where the driver
+> supports it and falls back to **Park** where it does not — EQMOD, for
+> example. A park *latches* the mount: it ignores every motion command
+> until something unparks it. Where it physically stops is the park
+> position configured in your own mount driver, which may well be the
+> home position — so it can look homed and still be parked. Check
+> [docs/mount-capabilities/mount-capabilities.md](docs/mount-capabilities/mount-capabilities.md)
+> for what is known about your driver.
+
 Where it points the mount follows PHD2's own guidance for where calibration
 and the Guiding Assistant should be run - see PHD2's manual on the
 [Guiding Assistant](https://openphdguiding.org/man/Tools.htm#Guiding_Assistant)

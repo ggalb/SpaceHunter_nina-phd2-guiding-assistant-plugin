@@ -63,7 +63,8 @@
                                 MinWidth="80"
                                 VerticalAlignment="Center"
                                 ItemsSource="{Binding Source={util:EnumBindingSource {x:Type core:EndAction}}}"
-                                SelectedItem="{Binding EndAction}" />
+                                SelectedItem="{Binding EndAction}"
+                                ToolTip="Where the mount is left when the run finishes.&#10;&#10;Auto - Find home if the driver supports it, otherwise Park.&#10;Home - Find home. Fails if the driver cannot.&#10;Park - Park. Note this LATCHES the mount: add Unpark Scope after this instruction or nothing will move again. Where it stops is the park position set in your mount driver, which may be the home position - it can look homed and still be parked.&#10;None - leave the mount where the run finished." />
                         </StackPanel>
 
                     </StackPanel>

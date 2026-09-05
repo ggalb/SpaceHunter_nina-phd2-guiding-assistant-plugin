@@ -181,6 +181,20 @@ namespace NINA.Plugin.Phd2GuidingAssistant.Core {
                 Logger.Info($"EndAction 'Auto' resolved to '{action}' from the driver's capabilities.");
             }
 
+            // A park LATCHES the mount: it will ignore every motion command until something
+            // unparks it. On a driver that cannot find home - EQMOD, for one - 'Auto' resolves
+            // here without the user ever choosing Park, and the mount may well stop at the home
+            // position anyway, because that is what the driver's own park destination is set to.
+            // It therefore looks like a successful home and is not. Say so, or the next
+            // instruction fails silently and nothing explains why.
+            if (action == EndAction.Park) {
+                Logger.Warning(
+                    "End action is Park: the mount will be LATCHED when this instruction finishes. " +
+                    "Your sequence must Unpark before anything can move it again. Where it physically " +
+                    "stops is the park position configured in your mount driver, which may be the home " +
+                    "position - it can look homed and still be parked.");
+            }
+
             switch (action) {
                 case EndAction.None:
                     Logger.Warning("EndAction = None - leaving the mount where it is.");
