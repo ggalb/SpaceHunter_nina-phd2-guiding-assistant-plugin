@@ -30,6 +30,13 @@ you. Set it to run at the end of your set-up sequence, before imaging starts.
 > [docs/mount-capabilities/mount-capabilities.md](docs/mount-capabilities/mount-capabilities.md)
 > for what is known about your driver.
 
+> **ZWO AM3/AM5/AM7 users: the park position is fixed, not
+> configurable.** Confirmed 2026-09-07 - parking always sends the mount to
+> Altitude 0°, Azimuth 270° (due west, at the horizon), regardless of any
+> setting in the ASI Mount driver. If your enclosure needs clearance
+> somewhere other than that, `End action = Home` is your only option -
+> there is no park position to reconfigure.
+
 Where it points the mount follows PHD2's own guidance for where calibration
 and the Guiding Assistant should be run - see PHD2's manual on the
 [Guiding Assistant](https://openphdguiding.org/man/Tools.htm#Guiding_Assistant)

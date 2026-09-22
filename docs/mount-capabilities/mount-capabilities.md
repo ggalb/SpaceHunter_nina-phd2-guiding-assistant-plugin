@@ -42,15 +42,18 @@ records which drivers need which fallback.
 
 | Mount / driver | ProgID | Alignment | EqSystem | FindHome | Park | Unpark | SlewAsync | SetTracking | PulseGuide |
 |---|---|---|---|---|---|---|---|---|---|
-| Sky-Watcher EQ6-R Pro (GS Server) ✅ | `ASCOM.GS.Sky.Telescope` | German Polar (GEM) | Topocentric | yes | yes | yes | yes | yes | yes |
+| Orion Atlas II EQ-G / Sky-Watcher EQ6-R Pro (GS Server) ✅ | `ASCOM.GS.Sky.Telescope` | German Polar (GEM) | Topocentric | yes | yes | yes | yes | yes | yes |
 | Alpaca Telescope Simulator | `ASCOM.Simulator.Telescope` | German Polar (GEM) | Topocentric | yes | yes | yes | yes | yes | yes |
 | iOptron CEM/GEM/HEM/HAE/HAZ/SkyHunter | `ASCOM.iOptron2017.Telescope` | German Polar (GEM) | Topocentric | no ⚠️ | yes | yes | yes | yes | yes |
-| ZWO AM3/AM5/AM7 | `ASCOM.ASIMount.Telescope` | German Polar (GEM) | Topocentric | yes | yes | yes | yes | yes | yes |
+| ZWO AM3/AM5/AM7 (AM-family) ✅ | `ASCOM.ASIMount.Telescope` | German Polar (GEM) | Topocentric | yes | yes | yes | yes | yes | yes |
 | EQMOD HEQ5/6 (Synta) ✅ | `EQMOD.Telescope` | German Polar (GEM) | **J2000** | **no ⚠️** | yes | yes | yes | yes | yes |
 <!-- rows appended by Dump-AscomCapabilities.ps1 go below this line -->
 
 Legend: `yes` / `no` / `n/i` (property not implemented by the driver).
 ✅ = dumped with real hardware connected. ⚠️ = dumped idle, provisional.
+
+Contributed dumps: ZWO AM5 — Jeff Newgard (2026-09-06 capability dump,
+2026-09-07 park-position confirmation).
 
 ## Per-mount notes
 
@@ -59,8 +62,11 @@ matrix can't express — whether `FindHome()` blocks or returns
 immediately, what "home" physically means, whether `SideOfPier` is
 meaningful, how `Sync` behaves, and any driver quirks.
 
-### Sky-Watcher EQ6-R Pro — GS Server (`ASCOM.GS.Sky.Telescope`) ✅
+### Orion Atlas II EQ-G / Sky-Watcher EQ6-R Pro — GS Server (`ASCOM.GS.Sky.Telescope`) ✅
 
+- The Orion Atlas II EQ-G is Georg's mount and shares the same GS Server
+  driver as the Sky-Watcher EQ6-R Pro (Orion's North American rebrand of
+  the same hardware), so this row and its notes apply to both.
 - **Dumped 2026-07-27 with the mount connected** — driver v1.2.2.4,
   interface version 4. Real site and sidereal time reported, `AtHome` =
   True from the previous night's run, `SideOfPier` = pierEast. This is
@@ -125,29 +131,78 @@ meaningful, how `Sync` behaves, and any driver quirks.
 - iOptron's "go to zero position" is functionally equivalent to Find
   Home, and that is what `FindHome()` triggers.
 
-### ZWO AM3 / AM5 / AM7 (`ASCOM.ASIMount.Telescope`)
+### ZWO AM3 / AM5 / AM7 (`ASCOM.ASIMount.Telescope`) ✅
 
-- Dumped 2026-07-27, driver v6.5.27.0, interface version 3. No hardware
-  attached, so reported values are idle defaults.
-- **`CanFindHome` = True** — confirms the secondhand claim. End-of-run
-  homing works as written on the AM series.
-- **`SiderealTime` returned `-1`** — an invalid value, with no site
-  configured and no mount connected. Worth knowing because the target
-  is computed as `RA = SiderealTime - offset`; a bogus LST yields a
-  nonsense target. See the safety note below.
+- **First dumped 2026-07-27, driver v6.5.27.0, interface version 3, no
+  hardware attached** — reported values were idle defaults. **Re-dumped
+  2026-09-06, driver v6.5.24.0, interface version 3, with a real AM5
+  connected** — contributed by Jeff Newgard. A non-default, plausible
+  site latitude/longitude and a valid `SiderealTime` (15.25 h, vs. this
+  same driver's own `-1` idle placeholder in the 07-27 dump) confirm the
+  mount was genuinely connected, not idle; the "already connected" log
+  line just means the script found `Connected = True` before it tried to
+  connect itself (see the EQ6-R Pro note above on shared `Connected`
+  state), not that hardware was absent. Site coordinates themselves are
+  omitted from this doc — not needed for the capability record, and they
+  identify a contributor's physical location. Every capability
+  flag came back identical to the idle dump: `CanFindHome`, `CanPark`,
+  `CanUnpark`, `CanSetPark`, `CanSlewAsync`, `CanSetTracking`,
+  `CanSetGuideRates`, `CanPulseGuide` all True; `CanSetPierSide`,
+  `CanSlewAltAz`, `CanSlewAltAzAsync` all False. **Unlike the iOptron
+  driver, the ZWO driver's capability flags are accurate even while
+  idle** — no re-verification needed here, unusually for this matrix.
+- **`CanFindHome` = True**, confirmed on real hardware — end-of-run homing
+  works as written on the AM series.
+- **`SiderealTime` returned `-1` on the idle dump; the connected dump
+  returned a valid value (15.25 h)** — confirms `-1` was an idle-only
+  artifact of no site/mount configured, not a driver defect. The safety
+  finding below (validate `SiderealTime` before slewing) stays as
+  defensive code, but the ZWO driver itself is not the risk once
+  connected to real hardware.
+- **`SideOfPier` = `pierUnknown`, confirmed with the mount genuinely
+  connected** (real site + valid sidereal time, not idle defaults) —
+  unlike the EQ6-R Pro or EQMOD dumps, this did not resolve on
+  connection, so it is the driver's real answer, not an idle artifact.
+  The dump script prints a generic "re-check against real hardware"
+  caveat any time `pierUnknown` appears (it's boilerplate baked into the
+  script for every driver, not a live diagnosis) — that caveat is now
+  resolved for the AM series specifically. Given `CanSetPierSide = False`
+  on the same driver, `pierUnknown` most likely reflects a genuine "not
+  applicable" for this harmonic-drive mount (no meridian flip to report)
+  rather than a gap in the driver — but that's inference, not confirmed
+  by ZWO. The plugin's sanity check already degrades to a
+  declination-only test when `SideOfPier` is unknown, so no action is
+  needed either way.
 - **`CanSetPierSide` = False**, unlike the iOptron and the simulator.
   Consistent with a harmonic mount that need not flip at the meridian.
 - `CanSlewAltAz` / `CanSlewAltAzAsync` both False — RA/Dec only.
-- Tracking rates: sidereal, lunar, solar. No king rate.
-- Axis rates: continuous 0–6 deg/sec on both axes.
-- ⚠️ **UNVERIFIED — the park position may be fixed, not user-defined.**
-  A ZWO user-forum thread reports that parking under ASCOM moves RA
-  counter-clockwise about 90° and Dec counter-clockwise 90°, i.e. a fixed
-  orientation rather than one the user sets. Not confirmed by ZWO
-  documentation and not tested here. **If true it matters under a roof:**
-  an observatory user could not move the park position to suit their
-  enclosure and would have to use `Find home` instead, or accept the
-  orientation the roof has to clear. Georg is asking AM-series owners.
+- Tracking rates: sidereal, lunar, solar. No king rate. Confirmed
+  identical on the connected dump.
+- Axis rates: continuous 0–6 deg/sec on both axes. Confirmed identical on
+  the connected dump.
+- The connected dump's log line read "Driver was already connected -
+  leaving that alone" — consistent with the EQ6-R Pro finding that
+  `Connected` may be shared across ASCOM clients rather than per-client
+  (something else, e.g. N.I.N.A. or PHD2, was presumably already
+  connected to the mount when the dump ran).
+- ✅ **CONFIRMED 2026-09-07 — the park position is fixed, not
+  user-defined.** Jeff Newgard sent a screenshot of the ASI Mount Setup
+  utility's Mount Info panel taken with his AM5 at park:
+  **Altitude 00°00'00", Azimuth 270°00'00" (due west, at the horizon),
+  Dec +00°00'00", Pier E.** This matches the two earlier, weaker signals
+  exactly — a ZWO user-forum thread reporting parking under ASCOM moves
+  RA and Dec counter-clockwise about 90° each, and Jeff's own
+  recollection ("set at the standard left turn at a 90-degree angle") —
+  and upgrades them from unverified reports to an observed value from
+  the vendor's own utility. Still not exercised through the ASCOM
+  `Park()` call itself (the capability dump stays read-only), but this
+  is as close to confirmed as this matrix gets without running it.
+  **Matters under a roof:** an observatory user cannot move the park
+  position to suit their enclosure — plan the enclosure around Alt 0° /
+  Az 270°, or use `Find home` instead if that clearance isn't available.
+  (Site coordinates visible in the same screenshot are omitted here for
+  the same reason as the 2026-09-06 dump — contributor location, not
+  needed for the capability record.)
 
 ---
 
@@ -307,3 +362,7 @@ Other notes:
 If you run a different mount, running the script and sending the output
 would be genuinely useful. It connects, reads properties, prints a
 matrix row, and disconnects. It moves nothing.
+
+Contributors are credited by name next to their row/section above, and in
+the "Contributed dumps" line under the matrix — thank you to everyone who
+sends one in.
