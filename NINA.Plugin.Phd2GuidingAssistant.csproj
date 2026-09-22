@@ -13,10 +13,11 @@
 
     <AssemblyTitle>PHD2 Guiding Assistant</AssemblyTitle>
     <Title>PHD2 Guiding Assistant</Title>
-    <Authors>Georg</Authors>
+    <Authors>Space Hunter - Georg G Albrecht</Authors>
+    <Company>Space Hunter - Georg G Albrecht</Company>
     <Product>PHD2 Guiding Assistant</Product>
     <Description>Runs PHD2's Guiding Assistant unattended from the N.I.N.A. Sequencer: slews to a calibration spot, measures seeing/drift with guide output disabled, applies the recommended minimum-move values, and stands the mount down.</Description>
-    <Copyright>Copyright © 2026</Copyright>
+    <Copyright>Copyright © 2026 Space Hunter - Georg G Albrecht</Copyright>
 
     <!-- Local install of N.I.N.A. used as the compile-time reference source (no NuGet/network needed). -->
     <NinaInstallDir>C:\Program Files\N.I.N.A. - Nighttime Imaging 'N' Astronomy</NinaInstallDir>

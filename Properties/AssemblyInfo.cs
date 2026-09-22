@@ -10,9 +10,9 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Phd2 GA - Measure Seeing Conditions")]
 [assembly: AssemblyDescription("Runs PHD2's Guiding Assistant unattended from the N.I.N.A. Sequencer.")]
-[assembly: AssemblyCompany("Georg G Albrecht")]
+[assembly: AssemblyCompany("Space Hunter - Georg G Albrecht")]
 [assembly: AssemblyProduct("Phd2 GA - Measure Seeing Conditions")]
-[assembly: AssemblyCopyright("Copyright © 2026")]
+[assembly: AssemblyCopyright("Copyright © 2026 Space Hunter - Georg G Albrecht")]
 
 // Minimum N.I.N.A. version this plugin was built and tested against.
 [assembly: AssemblyMetadata("MinimumApplicationVersion", "3.2.0.9001")]
