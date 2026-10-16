@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // the first release, or N.I.N.A. will treat every future build as a different plugin.
 [assembly: Guid("6f2a9b7e-6c9e-4b7e-9c02-6f2a2d7e9c11")]
 
-[assembly: AssemblyVersion("1.0.1.0")]
-[assembly: AssemblyFileVersion("1.0.1.0")]
+[assembly: AssemblyVersion("1.0.2.0")]
+[assembly: AssemblyFileVersion("1.0.2.0")]
 
 [assembly: AssemblyTitle("Phd2 GA - Measure Seeing Conditions")]
 [assembly: AssemblyDescription("Runs PHD2's Guiding Assistant unattended from the N.I.N.A. Sequencer.")]
