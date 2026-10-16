@@ -23,7 +23,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyMetadata("Homepage", "https://github.com/ggalb/SpaceHunter_nina-phd2-guiding-assistant-plugin")]
 [assembly: AssemblyMetadata("Tags", "PHD2,Guiding,Guiding Assistant,Min Move")]
 [assembly: AssemblyMetadata("ChangelogURL", "")]
-[assembly: AssemblyMetadata("FeaturedImageURL", "")]
+[assembly: AssemblyMetadata("FeaturedImageURL", "https://raw.githubusercontent.com/ggalb/SpaceHunter_nina-phd2-guiding-assistant-plugin/master/assets/Logo.png")]
 [assembly: AssemblyMetadata("ScreenshotURL", "")]
 [assembly: AssemblyMetadata("AltScreenshotURL", "")]
 [assembly: AssemblyMetadata("LongDescription", @"This plugin keeps PHD2's per-axis minimum-move guiding settings matched to the actual seeing and mechanical conditions on a given night - automatically, without anyone driving PHD2's UI by hand. Run it once, early in a session, after guiding has already been calibrated: it measures, recommends, and applies fresh RA/Dec minimum-move values for you. Set it to run at the end of your set-up sequence, before imaging starts.
