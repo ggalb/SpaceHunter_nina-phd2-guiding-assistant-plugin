@@ -9,6 +9,14 @@ Run it once, early in a session, after guiding has already been calibrated:
 it measures, recommends, and applies fresh RA/Dec minimum-move values for
 you. Set it to run at the end of your set-up sequence, before imaging starts.
 
+> [!WARNING]
+> ⚠️ **This plugin moves your mount without you touching it.** Before running
+> it in an unattended sequence, test it where you can watch the mount: see
+> every slew, the end action (Home/Park), and your "When Becomes Unsafe"
+> handling (e.g. roof close, park) actually work with your equipment and
+> site. Stay within reach of your mount's stop/power control during the
+> first runs. Use at your own risk - no warranty (MPL-2.0, sections 6-7).
+
 ## What it does
 
 1. Slews the mount to a fixed Declination near the meridian, approaching

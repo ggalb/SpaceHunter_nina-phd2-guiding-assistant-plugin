@@ -26,7 +26,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyMetadata("FeaturedImageURL", "https://raw.githubusercontent.com/ggalb/SpaceHunter_nina-phd2-guiding-assistant-plugin/master/assets/Logo.png")]
 [assembly: AssemblyMetadata("ScreenshotURL", "")]
 [assembly: AssemblyMetadata("AltScreenshotURL", "")]
-[assembly: AssemblyMetadata("LongDescription", @"This plugin keeps PHD2's per-axis minimum-move guiding settings matched to the actual seeing and mechanical conditions on a given night - automatically, without anyone driving PHD2's UI by hand. Run it once, early in a session, after guiding has already been calibrated: it measures, recommends, and applies fresh RA/Dec minimum-move values for you. Set it to run at the end of your set-up sequence, before imaging starts.
+[assembly: AssemblyMetadata("LongDescription", @"**⚠ WARNING - this plugin moves your mount without you touching it.** Before running it in an unattended sequence, test it where you can watch the mount: see every slew, the end action (Home/Park), and your ""When Becomes Unsafe"" handling (e.g. roof close, park) actually work with your equipment and site. Stay within reach of your mount's stop/power control during the first runs. Use at your own risk - no warranty (MPL-2.0, sections 6-7).
+
+This plugin keeps PHD2's per-axis minimum-move guiding settings matched to the actual seeing and mechanical conditions on a given night - automatically, without anyone driving PHD2's UI by hand. Run it once, early in a session, after guiding has already been calibrated: it measures, recommends, and applies fresh RA/Dec minimum-move values for you. Set it to run at the end of your set-up sequence, before imaging starts.
 
 What it does, step by step:
 
